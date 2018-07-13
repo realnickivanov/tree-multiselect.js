@@ -1,4 +1,3 @@
-/* jQuery Tree Multiselect v2.5.2 | (c) Patrick Tsai | MIT Licensed */
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 'use strict';
 
@@ -68,6 +67,7 @@ function Item(obj) {
   this.value = obj.value;
   this.text = obj.text;
   this.description = obj.description;
+  this.htmlContent = obj.htmlContent;
   this.initialIndex = obj.initialIndex ? parseInt(obj.initialIndex) : null;
   this.section = obj.section;
   this.disabled = obj.disabled;
@@ -488,6 +488,7 @@ Tree.prototype.createAst = function (options) {
       value: option.value,
       text: option.text,
       description: option.getAttribute('data-description'),
+      htmlContent: option.getAttribute('data-html'),
       initialIndex: option.getAttribute('data-index'),
       section: option.getAttribute('data-section'),
       disabled: option.hasAttribute('readonly'),
@@ -1054,11 +1055,13 @@ exports.createNode = function (tag, props) {
 
   if (props) {
     for (var key in props) {
-      if (props.hasOwnProperty(key) && key !== 'text') {
+      if (props.hasOwnProperty(key) && key !== 'text' && key !== 'html') {
         node.setAttribute(key, props[key]);
       }
     }
-    if (props.text) {
+    if (props.html) {
+      node.innerHTML = document.getElementById(props.html).innerHTML;
+    } else if (props.text) {
       node.textContent = props.text;
     }
   }
@@ -1103,7 +1106,8 @@ exports.createSelection = function (astItem, createCheckboxes, disableCheckboxes
     var labelProps = {
       class: astItem.disabled ? 'disabled' : '',
       for: optionLabelCheckboxId,
-      text: astItem.text || astItem.value
+      text: astItem.text || astItem.value,
+      html: astItem.htmlContent
     };
     var label = exports.createNode('label', labelProps);
     selectionNode.appendChild(label);

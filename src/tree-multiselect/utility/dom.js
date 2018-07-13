@@ -3,11 +3,13 @@ exports.createNode = function (tag, props) {
 
   if (props) {
     for (var key in props) {
-      if (props.hasOwnProperty(key) && key !== 'text') {
+      if (props.hasOwnProperty(key) && key !== 'text' && key !== 'html') {
         node.setAttribute(key, props[key]);
       }
     }
-    if (props.text) {
+    if (props.html) {
+      node.innerHTML = document.getElementById(props.html).innerHTML;
+    } else if (props.text) {
       node.textContent = props.text;
     }
   }
@@ -52,7 +54,8 @@ exports.createSelection = function (astItem, createCheckboxes, disableCheckboxes
     var labelProps = {
       class: astItem.disabled ? 'disabled' : '',
       for: optionLabelCheckboxId,
-      text: astItem.text || astItem.value
+      text: astItem.text || astItem.value,
+      html: astItem.htmlContent
     };
     var label = exports.createNode('label', labelProps);
     selectionNode.appendChild(label);

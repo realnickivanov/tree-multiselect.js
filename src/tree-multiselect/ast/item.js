@@ -10,6 +10,7 @@ function Item (obj) {
   this.value = obj.value;
   this.text = obj.text;
   this.description = obj.description;
+  this.htmlContent = obj.htmlContent;
   this.initialIndex = obj.initialIndex ? parseInt(obj.initialIndex) : null;
   this.section = obj.section;
   this.disabled = obj.disabled;
